@@ -1,0 +1,44 @@
+language: android
+android:
+  components:
+    - build-tools-20.0.0
+    - android-20
+jdk: oraclejdk8
+
+# Notification settings
+notifications:
+  email:
+    on_success: always
+    on_failure: always
+
+# Configuring build environment and running the build
+cache:
+  directories:
+  - $HOME/.gradle/wrapper
+  - $HOME/.gradle/caches/modules-2/files-2.1
+before_install:
+- chmod +x gradlew
+- chmod +x ./ci/*
+script:
+- ./ci/build_desktop.sh
+- ./ci/build_android.sh
+- ./ci/build_ios.sh
+- ./ci/build_html.sh
+
+# Deployment to GitHub-releases
+before_deploy:
+- ./ci/deploy_desktop.sh
+- ./ci/deploy_android.sh
+- ./ci/deploy_html.sh
+deploy:
+  provider: releases
+  api_key:
+    secure: TNQaPWUnUVwYO5OtS1f2DSxGc+AX1bhloswK+XKGh4tjEQ7gFdru0hNR3Co/x20/Srlb6rulnUd2C/n3x1zB7mcZGqAd/225OB7Jf1ndM05aw7AdLDzwseFkLSJLjmSJzeNXN5A4ucAxaTsyZ1CNVszReNPYoo6lFeTDLROr96fkdUHnaZbnY/RMgj49cP2glZ08nwnkCBHfJIICLhkuetxmNrpKtPFSOPyN++BwRg6Q+F/8ZEzoc30Huyee9E/f07AvsEPQl5DNEba5txKbApe7DGnStzHCQL/3JwNFYMz94s1ZWaySMguNqN6faoK6B5Qv+U/kx7W4SxulmP+hsk0OPkpKNYFlm7soLK5nUiCv2iC+zxlGX/or3iYmyCft/404RA94UE61tbxhxpJBm10im8Jn1UJI+DyQahXMQAmUk+2Wv5SgHIQwu2a1BcMDytrx+0hG+iGCWRUncaMOwwaoz9QFiDml7c19qDwFj6EV791+hKkux1FnYxYr5S7x3Ws8AzXg4+BYdPSV56t46KGMy2Oiwjg23tuy86SZ9ijcCLpG+4Uz9Kwdh0AnHCWffixrKEEM4/Tp7LzpbF1ZvySwiAxXSolCQvm0T3fWwrw2QDXIYMsvRFaQ9JptkqJ8x9j9UdlOgYJzIUUt1nFeEpovInl2UCGm3YhSXvBItXc=
+  file:
+  - "desktop/build/libs/reaktio-$TRAVIS_TAG.jar"
+  - "android/build/outputs/apk/reaktio-$TRAVIS_TAG.apk"
+  - "reaktio-$TRAVIS_TAG.zip"
+  on:
+    tags: true
+    repo: flaiker/reaktio
+    all_branches: true
