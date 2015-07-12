@@ -1,4 +1,4 @@
-# reaktio
+# reaktio [![Build Status](https://travis-ci.org/flaiker/reaktio.svg?branch=master)](https://travis-ci.org/flaiker/reaktio)
 A reaction test game using LibGDX
 
 ## License
