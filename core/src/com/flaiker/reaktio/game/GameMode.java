@@ -22,48 +22,8 @@
  * SOFTWARE.                                                                       *
  ***********************************************************************************/
 
-package com.flaiker.reaktio;
+package com.flaiker.reaktio.game;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.flaiker.reaktio.screens.MenuScreen;
-
-public class Reaktio extends Game {
-    private static final String LOG = Reaktio.class.getSimpleName();
-
-    @Override
-    public void create() {
-        Gdx.app.log(LOG, "Creating game on " + Gdx.app.getType());
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        Gdx.app.log(LOG, "Disposing game");
-    }
-
-    @Override
-    public void pause() {
-        super.pause();
-        Gdx.app.log(LOG, "Pausing game");
-    }
-
-    @Override
-    public void resume() {
-        super.resume();
-        Gdx.app.log(LOG, "Resuming game");
-    }
-
-    @Override
-    public void render() {
-        super.render();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        super.resize(width, height);
-        Gdx.app.log(LOG, "Resizing game to: " + width + " x " + height);
-
-        if (getScreen() == null) setScreen(new MenuScreen(this));
-    }
+public enum GameMode {
+    DEMO, NORMAL_TIME_LIMIT, NORMAL_CONTINUOUS
 }

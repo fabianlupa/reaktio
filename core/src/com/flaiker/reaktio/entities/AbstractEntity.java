@@ -22,48 +22,76 @@
  * SOFTWARE.                                                                       *
  ***********************************************************************************/
 
-package com.flaiker.reaktio;
+package com.flaiker.reaktio.entities;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.flaiker.reaktio.screens.MenuScreen;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Reaktio extends Game {
-    private static final String LOG = Reaktio.class.getSimpleName();
+public abstract class AbstractEntity {
+    protected Sprite sprite;
 
-    @Override
-    public void create() {
-        Gdx.app.log(LOG, "Creating game on " + Gdx.app.getType());
+    private boolean selfSolving;
+
+    private boolean solved    = false;
+    private float   timeAlive = 0;
+
+
+    public AbstractEntity(TextureRegion textureRegion, float x, float y, float width, float height, boolean selfSolving) {
+        sprite = new Sprite(textureRegion);
+        sprite.setPosition(x, y);
+        sprite.setSize(width, height);
+        this.selfSolving = selfSolving;
     }
 
-    @Override
-    public void dispose() {
-        super.dispose();
-        Gdx.app.log(LOG, "Disposing game");
+    public boolean isSolved() {
+        return solved;
     }
 
-    @Override
-    public void pause() {
-        super.pause();
-        Gdx.app.log(LOG, "Pausing game");
+    public void setSolved(boolean solved) {
+        this.solved = solved;
     }
 
-    @Override
-    public void resume() {
-        super.resume();
-        Gdx.app.log(LOG, "Resuming game");
+    public float getX() {return sprite.getX();}
+
+    public float getY() {return sprite.getY();}
+
+    public float getWidth() {return sprite.getWidth();}
+
+    public float getHeight() {return sprite.getHeight();}
+
+    public float getTimeAlive() {
+        return timeAlive;
     }
 
-    @Override
-    public void render() {
-        super.render();
+    public void draw(SpriteBatch batch) {
+        if (!isSolved()) {
+            timeAlive += Gdx.graphics.getDeltaTime();
+        }
+        if (selfSolving && !isSolved()) {
+            selfSolve();
+        }
+
+        sprite.draw(batch);
     }
 
-    @Override
-    public void resize(int width, int height) {
-        super.resize(width, height);
-        Gdx.app.log(LOG, "Resizing game to: " + width + " x " + height);
-
-        if (getScreen() == null) setScreen(new MenuScreen(this));
+    public void resetVisibility() {
+        setSolved(true);
+        sprite.setAlpha(1);
     }
+
+    protected void setPosition(float x, float y) {
+        sprite.setPosition(x, y);
+    }
+
+    public abstract void selfSolve();
+
+    public abstract boolean canTouchDown();
+
+    public abstract boolean canTouchDrag();
+
+    public boolean touchDown(float x, float y) {return false;}
+
+    public boolean touchDragged(float x, float y) {return false;}
 }
