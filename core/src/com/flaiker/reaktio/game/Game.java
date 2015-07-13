@@ -169,13 +169,15 @@ public class Game implements InputProcessor {
                     dragCount++;
                 }
             }
-            score = "SingleTouch: " + Tools.formatNumber(singleTouchTime / singleTouchCount, 1, 2) + "s\nDoubleTouch: " +
-                    Tools.formatNumber(doubleTouchTime / doubleTouchCount, 1, 2) + "s\nDrag: " +
-                    Tools.formatNumber(dragTime / dragCount, 1, 2) + "s\nOverall: " +
+            score = "SingleTouch: " + Tools.formatNumber(singleTouchTime / singleTouchCount, 1, 2) + "\n" +
+                    "DoubleTouch: " + Tools.formatNumber(doubleTouchTime / doubleTouchCount, 1, 2) + "\n" +
+                    "Drag:        " + Tools.formatNumber(dragTime / dragCount, 1, 2) + "\n\n" +
+                    "Overall:     " +
                     Tools.formatNumber((singleTouchTime + doubleTouchTime + dragTime) / (singleTouchCount + doubleTouchCount + dragCount),
-                                       1, 2) + "s";
-            return score;
-        } else return score;
+                                       1, 2);
+        }
+
+        return score;
     }
 
     public float getGameTimeElapsed() {
