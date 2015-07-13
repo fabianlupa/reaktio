@@ -36,7 +36,6 @@ public class ScoreScreen extends AbstractScreen {
     public static final String LOG = ScoreScreen.class.getSimpleName();
 
     private Game game = null;
-    private Table table;
 
     public ScoreScreen(Reaktio reaktio, Game game) {
         super(reaktio);
@@ -54,7 +53,7 @@ public class ScoreScreen extends AbstractScreen {
 
         Gdx.app.log(LOG, game.getScore());
 
-        table = new Table(skin);
+        Table table = new Table(skin);
         table.setFillParent(true);
         uiStage.addActor(table);
 

@@ -39,7 +39,6 @@ import com.flaiker.reaktio.helper.DefaultActorListener;
 public class MenuScreen extends AbstractScreen {
     public static final String LOG = MenuScreen.class.getSimpleName();
 
-    private Table table;
     private Game  demoGame;
 
     public MenuScreen(Reaktio game) {
@@ -66,7 +65,7 @@ public class MenuScreen extends AbstractScreen {
 
         if (demoGame == null) demoGame = new Game(GameSettings.newDemoGameSettings(), SCREEN_WIDTH, SCREEN_HEIGHT, camera);
 
-        table = new Table(skin);
+        Table table = new Table(skin);
         table.setFillParent(true);
         uiStage.addActor(table);
 
