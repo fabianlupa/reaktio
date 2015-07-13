@@ -46,16 +46,16 @@ public abstract class AbstractScreen implements Screen {
 
     protected final Stage              uiStage;
     protected final Skin               skin;
-    protected final Reaktio            game;
+    protected final Reaktio            reaktio;
     protected final SpriteBatch        batch;
     protected       OrthographicCamera camera;
 
     private Label fpsLabel;
     private Image backgroundImage;
 
-    public AbstractScreen(Reaktio game) {
+    public AbstractScreen(Reaktio reaktio) {
         this.batch = new SpriteBatch();
-        this.game = game;
+        this.reaktio = reaktio;
         this.uiStage = new Stage(new StretchViewport(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         this.fpsLabel = new Label("", skin, "arial", Color.WHITE);
@@ -64,9 +64,9 @@ public abstract class AbstractScreen implements Screen {
         camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
-    public AbstractScreen(Reaktio game, Skin skin) {
+    public AbstractScreen(Reaktio reaktio, Skin skin) {
         this.batch = new SpriteBatch();
-        this.game = game;
+        this.reaktio = reaktio;
         this.uiStage = new Stage(new StretchViewport(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.skin = skin;
         this.fpsLabel = new Label("", skin, "arial", Color.WHITE);
@@ -113,7 +113,7 @@ public abstract class AbstractScreen implements Screen {
         Gdx.app.log(LOG, "Disposing screen: " + getName());
         uiStage.dispose();
         //skin.dispose();
-        //game.dispose();
+        //reaktio.dispose();
         batch.dispose();
     }
 

@@ -39,18 +39,17 @@ public class GameScreen extends AbstractScreen {
 
     private Label gameTimeLabel = new Label("60.0", skin, "digital7-92", Color.WHITE);
     private Label infoLabel     = new Label("Touch to start!", skin, "digital7-64", Color.WHITE);
-    private Label scoreLabel    = new Label("", skin);
 
-    private final Game actualGame;
+    private final Game game;
 
     public GameScreen(Reaktio reaktio) {
         super(reaktio);
-        actualGame = new Game(GameSettings.newContinuousGameSettings(2, 2), SCREEN_WIDTH, SCREEN_HEIGHT, camera);
+        game = new Game(GameSettings.newContinuousGameSettings(2, 2), SCREEN_WIDTH, SCREEN_HEIGHT, camera);
     }
 
     public GameScreen(Reaktio reaktio, Skin skin) {
         super(reaktio, skin);
-        actualGame = new Game(GameSettings.newContinuousGameSettings(2, 2), SCREEN_WIDTH, SCREEN_HEIGHT, camera);
+        game = new Game(GameSettings.newTimeLimitGameSettings(30, 2, 2), SCREEN_WIDTH, SCREEN_HEIGHT, camera);
     }
 
     @Override
@@ -69,33 +68,25 @@ public class GameScreen extends AbstractScreen {
         infoLabel.setVisible(false);
         uiStage.addActor(infoLabel);
 
-        scoreLabel.setFontScale(1f);
-        scoreLabel.setPosition(0, SCREEN_HEIGHT * 0.5f);
-        scoreLabel.setVisible(false);
-        uiStage.addActor(scoreLabel);
-
-        Gdx.input.setInputProcessor(actualGame);
+        Gdx.input.setInputProcessor(game);
     }
 
     @Override
     public void preUIrender(float delta) {
-        if (actualGame.getGameMode() == GameMode.NORMAL_TIME_LIMIT) {
-            gameTimeLabel.setText(Tools.formatNumber(actualGame.getGameTimeRemaining(), 2, 2));
-        } else if (actualGame.getGameMode() == GameMode.NORMAL_CONTINUOUS) {
-            gameTimeLabel.setText(Tools.formatNumber(actualGame.getGameTimeElapsed(), 2, 2));
+        if (game.getGameMode() == GameMode.NORMAL_TIME_LIMIT) {
+            gameTimeLabel.setText(Tools.formatNumber(game.getGameTimeRemaining(), 2, 2));
+        } else if (game.getGameMode() == GameMode.NORMAL_CONTINUOUS) {
+            gameTimeLabel.setText(Tools.formatNumber(game.getGameTimeElapsed(), 2, 2));
         }
 
-        actualGame.render(batch);
+        game.render(batch);
         drawUI();
     }
 
     private void drawUI() {
-        if (actualGame.getGameState() == Game.GameState.START) {
+        if (game.getGameState() == Game.GameState.START) {
             if (!infoLabel.isVisible()) infoLabel.setVisible(true);
-        } else if (actualGame.getGameState() == Game.GameState.END) {
-            //scoreLabel.setText("SCORE:\n" + game.getScore());
-            //coreLabel.setVisible(true);
-        } else if (actualGame.getGameState() == Game.GameState.RUNNING) {
+        } else if (game.getGameState() == Game.GameState.RUNNING) {
             if (infoLabel.isVisible()) infoLabel.setVisible(false);
         }
     }
@@ -103,6 +94,6 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
-        if (actualGame.getGameState() == Game.GameState.END) game.setScreen(new ScoreScreen(game, actualGame, skin));
+        if (game.getGameState() == Game.GameState.END) reaktio.setScreen(new ScoreScreen(reaktio, game, skin));
     }
 }

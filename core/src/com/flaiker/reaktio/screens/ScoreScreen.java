@@ -35,24 +35,24 @@ import com.flaiker.reaktio.helper.DefaultActorListener;
 public class ScoreScreen extends AbstractScreen {
     public static final String LOG = ScoreScreen.class.getSimpleName();
 
-    private Game demoGame = null;
+    private Game game = null;
     private Table table;
 
-    public ScoreScreen(Reaktio game, Game demoGame) {
-        super(game);
-        this.demoGame = demoGame;
+    public ScoreScreen(Reaktio reaktio, Game game) {
+        super(reaktio);
+        this.game = game;
     }
 
-    public ScoreScreen(Reaktio game, Game demoGame, Skin skin) {
-        super(game, skin);
-        this.demoGame = demoGame;
+    public ScoreScreen(Reaktio reaktio, Game game, Skin skin) {
+        super(reaktio, skin);
+        this.game = game;
     }
 
     @Override
     public void show() {
         super.show();
 
-        Gdx.app.log(LOG, demoGame.getScore());
+        Gdx.app.log(LOG, game.getScore());
 
         table = new Table(skin);
         table.setFillParent(true);
@@ -63,11 +63,9 @@ public class ScoreScreen extends AbstractScreen {
         table.add(titleLabel).spaceBottom(5).align(1);
         table.row();
 
-        Container scoreListContainer = new Container();
+        Container<Label> scoreListContainer = new Container<Label>(new Label(game.getScore(), skin));
         scoreListContainer.setBackground(skin.getDrawable("default-round"));
         scoreListContainer.setColor(1, 1, 1, 0.9f);
-
-        scoreListContainer.setUserObject(new Label(demoGame.getScore(), skin));
 
         table.add(scoreListContainer).expand().fill().pad(100, 100, 0, 100).row();
 
@@ -78,7 +76,7 @@ public class ScoreScreen extends AbstractScreen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 super.touchUp(event, x, y, pointer, button);
-                game.setScreen(new GameScreen(game, skin));
+                reaktio.setScreen(new GameScreen(reaktio, skin));
             }
         });
         table.add(tryAgainButton).expand().fill().pad(100, 100, 0, 100).row();
@@ -90,7 +88,7 @@ public class ScoreScreen extends AbstractScreen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 super.touchUp(event, x, y, pointer, button);
-                game.setScreen(new MenuScreen(game, skin));
+                reaktio.setScreen(new MenuScreen(reaktio, skin));
             }
         });
         table.add(backButton).expand().fill().pad(100, 100, 50, 100).row();
@@ -105,6 +103,6 @@ public class ScoreScreen extends AbstractScreen {
 
     @Override
     protected void preUIrender(float delta) {
-        demoGame.render(batch);
+        game.render(batch);
     }
 }
