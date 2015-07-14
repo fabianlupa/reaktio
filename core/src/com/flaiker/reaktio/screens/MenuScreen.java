@@ -41,22 +41,9 @@ public class MenuScreen extends AbstractScreen {
 
     private Game  demoGame;
 
-    public MenuScreen(Reaktio game) {
-        super(game);
-    }
-
-    public MenuScreen(Reaktio reaktio, Game demoGame) {
-        super(reaktio);
-        this.demoGame = demoGame;
-    }
-
     public MenuScreen(Reaktio reaktio, Game demoGame, Skin skin) {
         super(reaktio, skin);
         this.demoGame = demoGame;
-    }
-
-    public MenuScreen(Reaktio reaktio, Skin skin) {
-        super(reaktio, skin);
     }
 
     @Override
@@ -84,7 +71,7 @@ public class MenuScreen extends AbstractScreen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 super.touchUp(event, x, y, pointer, button);
-                reaktio.setScreen(new GameScreen(reaktio, skin));
+                reaktio.setScreen(new ModeSelectionScreen(reaktio, demoGame, skin));
             }
         });
         table.add(startGameButton).expand().fill().pad(100, 100, 100, 100);

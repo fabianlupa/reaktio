@@ -27,65 +27,70 @@ package com.flaiker.reaktio.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.flaiker.reaktio.Reaktio;
 import com.flaiker.reaktio.game.Game;
+import com.flaiker.reaktio.game.GameSettings;
 import com.flaiker.reaktio.helper.DefaultActorListener;
 
-public class ScoreScreen extends AbstractScreen {
-    public static final String LOG = ScoreScreen.class.getSimpleName();
+public class ModeSelectionScreen extends AbstractScreen {
+    public static final String LOG = ModeSelectionScreen.class.getSimpleName();
 
-    private Game game = null;
+    private Game demoGame;
 
-    public ScoreScreen(Reaktio reaktio, Game game, Skin skin) {
+    public ModeSelectionScreen(Reaktio reaktio, Game demoGame, Skin skin) {
         super(reaktio, skin);
-        this.game = game;
+        this.demoGame = demoGame;
     }
 
     @Override
     public void show() {
         super.show();
 
-        Gdx.app.log(LOG, game.getScore());
+        if (demoGame == null) demoGame = new Game(GameSettings.newDemoGameSettings(), SCREEN_WIDTH, SCREEN_HEIGHT, camera);
 
         Table table = new Table(skin);
         table.setFillParent(true);
         uiStage.addActor(table);
 
         table.add().padBottom(50).row();
-        Label titleLabel = new Label("SCORE", skin, "digital7-92", Color.WHITE);
+        Label titleLabel = new Label("Reaktio", skin, "digital7-92", Color.WHITE);
+        //titleLabel.setFontScale(2);
         table.add(titleLabel).spaceBottom(5).align(1);
         table.row();
+        table.add("Select a Gamemode").align(1).spaceBottom(20);
+        table.row();
 
-        Container<Label> scoreListContainer = new Container<Label>(new Label(game.getScore(), skin));
-        scoreListContainer.setBackground(skin.getDrawable("default-round"));
-        scoreListContainer.setColor(1, 1, 1, 0.9f);
-
-        table.add(scoreListContainer).expand().fill().pad(100, 100, 0, 100).row();
-
-        // register the button "Try again"
-        TextButton tryAgainButton = new TextButton("TRY AGAIN", skin);
-        tryAgainButton.setColor(1, 1, 1, 0.9f);
-        tryAgainButton.addListener(new DefaultActorListener() {
+        // register the button "Timelimit"
+        TextButton timelimitButton = new TextButton("Timelimit", skin);
+        timelimitButton.setColor(1, 1, 1, 0.9f);
+        timelimitButton.addListener(new DefaultActorListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 super.touchUp(event, x, y, pointer, button);
-                reaktio.setScreen(new GameScreen(reaktio, game.getGameSettings(), skin));
+                reaktio.setScreen(new GameScreen(reaktio, GameSettings.newTimeLimitGameSettings(30, 2, 2), skin));
             }
         });
-        table.add(tryAgainButton).expand().fill().pad(100, 100, 0, 100).row();
+        table.add(timelimitButton).expand().fill().pad(0, 100, 100, 100);
+        table.row();
 
-        // register the button "Back"
-        TextButton backButton = new TextButton("BACK TO MAINMENU", skin);
-        backButton.setColor(1, 1, 1, 0.9f);
-        backButton.addListener(new DefaultActorListener() {
+        // register the button "Continuous"
+        TextButton continuousButton = new TextButton("Continuous", skin);
+        continuousButton.setColor(1, 1, 1, 0.9f);
+        continuousButton.addListener(new DefaultActorListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 super.touchUp(event, x, y, pointer, button);
-                reaktio.setScreen(new MenuScreen(reaktio, null, skin));
+                reaktio.setScreen(new GameScreen(reaktio, GameSettings.newContinuousGameSettings(2, 2), skin));
             }
         });
-        table.add(backButton).expand().fill().pad(100, 100, 50, 100).row();
+        table.add(continuousButton).expand().fill().pad(100, 100, 100, 100);
+        table.row();
+
+        table.add(new Label("www.flaiker.com", skin));
 
         Gdx.input.setInputProcessor(uiStage);
     }
@@ -97,6 +102,6 @@ public class ScoreScreen extends AbstractScreen {
 
     @Override
     protected void preUIrender(float delta) {
-        game.render(batch);
+        demoGame.render(batch);
     }
 }

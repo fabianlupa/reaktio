@@ -188,6 +188,10 @@ public class Game implements InputProcessor {
         return gameSettings.maxGameTime - gameTimeElapsed;
     }
 
+    public GameSettings getGameSettings() {
+        return gameSettings;
+    }
+
     private enum Entity {
         DRAG_SQUARE_ENTITY, SINGLE_TOUCH_ENTITY, DOUBLE_TOUCH_ENTITY
     }

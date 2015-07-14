@@ -42,14 +42,9 @@ public class GameScreen extends AbstractScreen {
 
     private final Game game;
 
-    public GameScreen(Reaktio reaktio) {
-        super(reaktio);
-        game = new Game(GameSettings.newContinuousGameSettings(2, 2), SCREEN_WIDTH, SCREEN_HEIGHT, camera);
-    }
-
-    public GameScreen(Reaktio reaktio, Skin skin) {
+    public GameScreen(Reaktio reaktio, GameSettings settings, Skin skin) {
         super(reaktio, skin);
-        game = new Game(GameSettings.newTimeLimitGameSettings(30, 2, 2), SCREEN_WIDTH, SCREEN_HEIGHT, camera);
+        game = new Game(settings, SCREEN_WIDTH, SCREEN_HEIGHT, camera);
     }
 
     @Override

@@ -64,6 +64,6 @@ public class Reaktio extends Game {
         super.resize(width, height);
         Gdx.app.log(LOG, "Resizing game to: " + width + " x " + height);
 
-        if (getScreen() == null) setScreen(new MenuScreen(this));
+        if (getScreen() == null) setScreen(new MenuScreen(this, null, null));
     }
 }

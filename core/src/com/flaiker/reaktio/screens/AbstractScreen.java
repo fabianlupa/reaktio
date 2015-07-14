@@ -53,23 +53,12 @@ public abstract class AbstractScreen implements Screen {
     private Label fpsLabel;
     private Image backgroundImage;
 
-    public AbstractScreen(Reaktio reaktio) {
-        this.batch = new SpriteBatch();
-        this.reaktio = reaktio;
-        this.uiStage = new Stage(new StretchViewport(SCREEN_WIDTH, SCREEN_HEIGHT));
-        this.skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-        this.fpsLabel = new Label("", skin, "arial", Color.WHITE);
-        this.backgroundImage = new Image(new Texture((Gdx.files.internal("bg.png"))));
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
-    }
-
     public AbstractScreen(Reaktio reaktio, Skin skin) {
         this.batch = new SpriteBatch();
         this.reaktio = reaktio;
         this.uiStage = new Stage(new StretchViewport(SCREEN_WIDTH, SCREEN_HEIGHT));
-        this.skin = skin;
-        this.fpsLabel = new Label("", skin, "arial", Color.WHITE);
+        this.skin = skin != null ? skin : new Skin(Gdx.files.internal("skin/uiskin.json"));
+        this.fpsLabel = new Label("", this.skin, "arial", Color.WHITE);
         this.backgroundImage = new Image(new Texture((Gdx.files.internal("bg.png"))));
         camera = new OrthographicCamera();
         camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
