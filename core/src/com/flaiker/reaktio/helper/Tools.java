@@ -22,48 +22,40 @@
  * SOFTWARE.                                                                       *
  ***********************************************************************************/
 
-package com.flaiker.reaktio;
+package com.flaiker.reaktio.helper;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.flaiker.reaktio.screens.MenuScreen;
+import java.util.Random;
 
-public class Reaktio extends Game {
-    private static final String LOG = Reaktio.class.getSimpleName();
+public class Tools {
+    private static Random random = new Random(System.currentTimeMillis());
 
-    @Override
-    public void create() {
-        Gdx.app.log(LOG, "Creating game on " + Gdx.app.getType());
+    /**
+     * Returns a random element of an enumeration
+     */
+    public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
+        int x = random.nextInt(clazz.getEnumConstants().length);
+        return clazz.getEnumConstants()[x];
     }
 
-    @Override
-    public void dispose() {
-        super.dispose();
-        Gdx.app.log(LOG, "Disposing game");
-    }
+    /**
+     * This function is needed because GWT has no "translation" for DecimalFormat
+     * @param number The number to be formatted
+     * @param minPreSeparatorPlacesCount The count wanted decimal places
+     * @param decimalPlacesCount Count of decimal places
+     * @return The formatted number
+     */
+    public static String formatNumber(double number, int minPreSeparatorPlacesCount, int decimalPlacesCount) {
+        String[] split = (String.valueOf(number)).split("\\.");
+        if (split.length != 2) return null;
 
-    @Override
-    public void pause() {
-        super.pause();
-        Gdx.app.log(LOG, "Pausing game");
-    }
+        String a = split[0];
+        String b = split[1];
 
-    @Override
-    public void resume() {
-        super.resume();
-        Gdx.app.log(LOG, "Resuming game");
-    }
+        while (a.length() < minPreSeparatorPlacesCount) a = "0" + a;
+        while (b.length() < decimalPlacesCount) b = b + "0";
 
-    @Override
-    public void render() {
-        super.render();
-    }
+        if (b.length() > decimalPlacesCount) b = b.substring(0, decimalPlacesCount);
 
-    @Override
-    public void resize(int width, int height) {
-        super.resize(width, height);
-        Gdx.app.log(LOG, "Resizing game to: " + width + " x " + height);
-
-        if (getScreen() == null) setScreen(new MenuScreen(this, null, null));
+        return a + '.' + b;
     }
 }

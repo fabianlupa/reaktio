@@ -22,48 +22,70 @@
  * SOFTWARE.                                                                       *
  ***********************************************************************************/
 
-package com.flaiker.reaktio;
+package com.flaiker.reaktio.entities;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.flaiker.reaktio.screens.MenuScreen;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Reaktio extends Game {
-    private static final String LOG = Reaktio.class.getSimpleName();
+public class DoubleTouchCircleEntity extends AbstractEntity {
+    public static final float WIDTH  = 100;
+    public static final float HEIGHT = 100;
 
-    @Override
-    public void create() {
-        Gdx.app.log(LOG, "Creating game on " + Gdx.app.getType());
+    private int     touchCount               = 0;
+    private boolean fadeOutAnimationFinished = false;
+
+    public DoubleTouchCircleEntity(float x, float y, boolean selfSolving) {
+        super(new TextureRegion(new Texture(Gdx.files.internal("DoubleTouchCircleEntity.png"))), x, y, WIDTH, HEIGHT, selfSolving);
     }
 
     @Override
-    public void dispose() {
-        super.dispose();
-        Gdx.app.log(LOG, "Disposing game");
+    public boolean canTouchDown() {
+        return true;
     }
 
     @Override
-    public void pause() {
-        super.pause();
-        Gdx.app.log(LOG, "Pausing game");
+    public boolean canTouchDrag() {
+        return false;
     }
 
     @Override
-    public void resume() {
-        super.resume();
-        Gdx.app.log(LOG, "Resuming game");
+    public boolean touchDown(float x, float y) {
+        if (!isSolved()) {
+            touchCount++;
+            if (touchCount == 1) sprite.setTexture(new Texture(Gdx.files.internal("SingleTouchCircleEntity.png")));
+            if (touchCount == 2) setSolved(true);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void render() {
-        super.render();
+    public void draw(SpriteBatch batch) {
+        super.draw(batch);
+
+        // Fade-Out-Animation
+        if (isSolved() && !fadeOutAnimationFinished) {
+            float newAlpha = sprite.getColor().a - (2.5f * Gdx.graphics.getDeltaTime());
+            if (newAlpha > 0) sprite.setAlpha(newAlpha);
+            else if (newAlpha < 0) {
+                sprite.setAlpha(0);
+                fadeOutAnimationFinished = true;
+            }
+        }
     }
 
     @Override
-    public void resize(int width, int height) {
-        super.resize(width, height);
-        Gdx.app.log(LOG, "Resizing game to: " + width + " x " + height);
+    public void resetVisibility() {
+        super.resetVisibility();
+        sprite.setTexture(new Texture(Gdx.files.internal("DoubleTouchCircleEntity.png")));
+    }
 
-        if (getScreen() == null) setScreen(new MenuScreen(this, null, null));
+    @Override
+    public void selfSolve() {
+        if (getTimeAlive() > 1 && touchCount == 0) touchDown(1, 1);
+        if (getTimeAlive() > 1.3 && touchCount == 1) touchDown(1, 1);
+
     }
 }

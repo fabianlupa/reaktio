@@ -22,48 +22,30 @@
  * SOFTWARE.                                                                       *
  ***********************************************************************************/
 
-package com.flaiker.reaktio;
+package com.flaiker.reaktio.game;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.flaiker.reaktio.screens.MenuScreen;
+public class GameSettings {
+    public final GameMode gameMode;
+    public final float    maxGameTime;
+    public final float    minSpawnDelay;
+    public final float    spawnDelayRandomPart;
 
-public class Reaktio extends Game {
-    private static final String LOG = Reaktio.class.getSimpleName();
-
-    @Override
-    public void create() {
-        Gdx.app.log(LOG, "Creating game on " + Gdx.app.getType());
+    public GameSettings(GameMode gameMode, float maxGameTime, float minSpawnDelay, float spawnDelayRandomPart) {
+        this.gameMode = gameMode;
+        this.maxGameTime = maxGameTime;
+        this.minSpawnDelay = minSpawnDelay;
+        this.spawnDelayRandomPart = spawnDelayRandomPart;
     }
 
-    @Override
-    public void dispose() {
-        super.dispose();
-        Gdx.app.log(LOG, "Disposing game");
+    public static GameSettings newContinuousGameSettings(float minSpawnDelay, float spawnDelayRandomPart) {
+        return new GameSettings(GameMode.NORMAL_CONTINUOUS, 0, minSpawnDelay, spawnDelayRandomPart);
     }
 
-    @Override
-    public void pause() {
-        super.pause();
-        Gdx.app.log(LOG, "Pausing game");
+    public static GameSettings newTimeLimitGameSettings(float maxGameTime, float minSpawnDelay, float spawnDelayRandomPart) {
+        return new GameSettings(GameMode.NORMAL_TIME_LIMIT, maxGameTime, minSpawnDelay, spawnDelayRandomPart);
     }
 
-    @Override
-    public void resume() {
-        super.resume();
-        Gdx.app.log(LOG, "Resuming game");
-    }
-
-    @Override
-    public void render() {
-        super.render();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        super.resize(width, height);
-        Gdx.app.log(LOG, "Resizing game to: " + width + " x " + height);
-
-        if (getScreen() == null) setScreen(new MenuScreen(this, null, null));
+    public static GameSettings newDemoGameSettings() {
+        return new GameSettings(GameMode.DEMO, 0, 1, 10);
     }
 }

@@ -22,48 +22,14 @@
  * SOFTWARE.                                                                       *
  ***********************************************************************************/
 
-package com.flaiker.reaktio;
+package com.flaiker.reaktio.helper;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.flaiker.reaktio.screens.MenuScreen;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 
-public class Reaktio extends Game {
-    private static final String LOG = Reaktio.class.getSimpleName();
-
+public abstract class DefaultActorListener extends InputListener {
     @Override
-    public void create() {
-        Gdx.app.log(LOG, "Creating game on " + Gdx.app.getType());
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        Gdx.app.log(LOG, "Disposing game");
-    }
-
-    @Override
-    public void pause() {
-        super.pause();
-        Gdx.app.log(LOG, "Pausing game");
-    }
-
-    @Override
-    public void resume() {
-        super.resume();
-        Gdx.app.log(LOG, "Resuming game");
-    }
-
-    @Override
-    public void render() {
-        super.render();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        super.resize(width, height);
-        Gdx.app.log(LOG, "Resizing game to: " + width + " x " + height);
-
-        if (getScreen() == null) setScreen(new MenuScreen(this, null, null));
+    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+        return true;
     }
 }
