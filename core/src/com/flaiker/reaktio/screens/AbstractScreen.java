@@ -72,7 +72,7 @@ public abstract class AbstractScreen implements Screen {
         //FPS Label
         fpsLabel.setFontScale(0.5f);
         fpsLabel.setPosition(uiStage.getWidth() - fpsLabel.getPrefWidth(), uiStage.getHeight() - fpsLabel.getHeight());
-        uiStage.addActor(fpsLabel);
+        if (reaktio.getPreferencesManager().isFpsCounterEnabled()) uiStage.addActor(fpsLabel);
     }
 
     @Override
