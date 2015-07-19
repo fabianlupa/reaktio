@@ -22,57 +22,33 @@
  * SOFTWARE.                                                                       *
  ***********************************************************************************/
 
-package com.flaiker.reaktio;
+package com.flaiker.reaktio.servcies;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.flaiker.reaktio.screens.MenuScreen;
-import com.flaiker.reaktio.servcies.PreferencesManager;
+import com.badlogic.gdx.Preferences;
 
-public class Reaktio extends Game {
-    private static final String LOG = Reaktio.class.getSimpleName();
+public class PreferencesManager {
+    public static final String LOG = PreferencesManager.class.getSimpleName();
 
-    // Services
-    private PreferencesManager preferencesManager;
+    private static final String PREFS_NAME              = "reaktioprefs";
+    private static final String PREF_FPSCOUNTER_ENABLED = "fpscounter.enabled";
 
-    @Override
-    public void create() {
-        Gdx.app.log(LOG, "Creating game on " + Gdx.app.getType());
-        preferencesManager = new PreferencesManager();
+    private Preferences preferences;
+
+    private Preferences getPreferences() {
+        if (preferences == null) {
+            preferences = Gdx.app.getPreferences(PREFS_NAME);
+        }
+        return preferences;
     }
 
-    @Override
-    public void dispose() {
-        super.dispose();
-        Gdx.app.log(LOG, "Disposing game");
+    public boolean isFpsCounterEnabled() {
+        return getPreferences().getBoolean(PREF_FPSCOUNTER_ENABLED, false);
     }
 
-    @Override
-    public void pause() {
-        super.pause();
-        Gdx.app.log(LOG, "Pausing game");
-    }
-
-    @Override
-    public void resume() {
-        super.resume();
-        Gdx.app.log(LOG, "Resuming game");
-    }
-
-    @Override
-    public void render() {
-        super.render();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        super.resize(width, height);
-        Gdx.app.log(LOG, "Resizing game to: " + width + " x " + height);
-
-        if (getScreen() == null) setScreen(new MenuScreen(this, null, null));
-    }
-
-    public PreferencesManager getPreferencesManager() {
-        return preferencesManager;
+    public void setFPSCounterEnabled(boolean fpsCounterEnabled) {
+        getPreferences().putBoolean(PREF_FPSCOUNTER_ENABLED, fpsCounterEnabled);
+        getPreferences().flush();
+        Gdx.app.log(LOG, "Set " + PREF_FPSCOUNTER_ENABLED + " to " + fpsCounterEnabled);
     }
 }
