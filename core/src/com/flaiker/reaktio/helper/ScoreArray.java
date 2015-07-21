@@ -24,50 +24,6 @@
 
 package com.flaiker.reaktio.helper;
 
-import java.util.Random;
-
-public class Tools {
-    private static Random random = new Random(System.currentTimeMillis());
-
-    /**
-     * Returns a random element of an enumeration
-     */
-    public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
-        int x = random.nextInt(clazz.getEnumConstants().length);
-        return clazz.getEnumConstants()[x];
-    }
-
-    /**
-     * This function is needed because GWT has no "translation" for DecimalFormat
-     * @param number The number to be formatted
-     * @param minPreSeparatorPlacesCount The count wanted decimal places
-     * @param decimalPlacesCount Count of decimal places
-     * @param addPlusSign Add plus sign in front of the number if it is positive
-     * @return The formatted number
-     */
-    public static String formatNumber(double number, int minPreSeparatorPlacesCount, int decimalPlacesCount, boolean addPlusSign) {
-        String[] split = (String.valueOf(number)).split("\\.");
-        if (split.length != 2) return null;
-
-        String a = split[0];
-        String b = split[1];
-
-        while (a.length() < minPreSeparatorPlacesCount) a = "0" + a;
-        while (b.length() < decimalPlacesCount) b = b + "0";
-
-        if (b.length() > decimalPlacesCount) b = b.substring(0, decimalPlacesCount);
-
-        return ((addPlusSign && number >= 0) ? '+' : "") + a + '.' + b;
-    }
-
-    /**
-     * This function is needed because GWT has no "translation" for DecimalFormat
-     * @param number The number to be formatted
-     * @param minPreSeparatorPlacesCount The count wanted decimal places
-     * @param decimalPlacesCount Count of decimal places
-     * @return The formatted number
-     */
-    public static String formatNumber(double number, int minPreSeparatorPlacesCount, int decimalPlacesCount) {
-        return formatNumber(number, minPreSeparatorPlacesCount, decimalPlacesCount, false);
-    }
+public class ScoreArray {
+    public ScoreEntry[] scores;
 }

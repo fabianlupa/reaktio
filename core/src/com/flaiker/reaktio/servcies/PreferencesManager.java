@@ -26,12 +26,19 @@ package com.flaiker.reaktio.servcies;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.utils.Json;
+import com.flaiker.reaktio.helper.ScoreArray;
+import com.flaiker.reaktio.helper.ScoreEntry;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class PreferencesManager {
     public static final String LOG = PreferencesManager.class.getSimpleName();
 
     private static final String PREFS_NAME              = "reaktioprefs";
     private static final String PREF_FPSCOUNTER_ENABLED = "fpscounter.enabled";
+    private static final String PREF_SCORE              = "score";
 
     private Preferences preferences;
 
@@ -50,5 +57,35 @@ public class PreferencesManager {
         getPreferences().putBoolean(PREF_FPSCOUNTER_ENABLED, fpsCounterEnabled);
         getPreferences().flush();
         Gdx.app.log(LOG, "Set " + PREF_FPSCOUNTER_ENABLED + " to " + fpsCounterEnabled);
+    }
+
+    public ScoreEntry[] getScoreArray() {
+        String string = getPreferences().getString(PREF_SCORE, null);
+        if (string == null) return null;
+
+        Json json = new Json();
+        return json.fromJson(ScoreArray.class, string).scores;
+    }
+
+    public void addScoreEntry(ScoreEntry score) {
+        Json json = new Json();
+
+        String string = getPreferences().getString(PREF_SCORE, null);
+        ScoreArray scores;
+
+        if (string == null) {
+            scores = new ScoreArray();
+            scores.scores = new ScoreEntry[0];
+        }
+        else scores = json.fromJson(ScoreArray.class, string);
+
+        ArrayList<ScoreEntry> scoreList = new ArrayList<ScoreEntry>(Arrays.asList(scores.scores));
+        scoreList.add(score);
+
+        scores.scores = scoreList.toArray(new ScoreEntry[scoreList.size()]);
+
+        getPreferences().putString(PREF_SCORE, json.toJson(scores));
+        getPreferences().flush();
+        Gdx.app.log(LOG, "Added scoreentry");
     }
 }
