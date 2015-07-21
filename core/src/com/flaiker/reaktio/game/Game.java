@@ -34,13 +34,14 @@ import com.flaiker.reaktio.entities.AbstractEntity;
 import com.flaiker.reaktio.entities.DoubleTouchCircleEntity;
 import com.flaiker.reaktio.entities.DragSquareEntity;
 import com.flaiker.reaktio.entities.SingleTouchCircleEntity;
+import com.flaiker.reaktio.helper.ScoreEntry;
 import com.flaiker.reaktio.helper.Tools;
 
 public class Game implements InputProcessor {
     private GameSettings gameSettings;
 
     private float                 gameTimeElapsed    = 0;
-    private String                score              = null;
+    private ScoreEntry            score              = null;
     private float                 timeSinceLastSpawn = 0;
     private GameState             gameState          = GameState.START;
     private Array<AbstractEntity> entities           = new Array<AbstractEntity>();
@@ -73,6 +74,7 @@ public class Game implements InputProcessor {
             if (gameSettings.gameMode == GameMode.NORMAL_TIME_LIMIT) {
                 if (getGameTimeRemaining() <= 0) {
                     resetEntityVisibility();
+                    score = calcScore();
                     gameState = GameState.END;
                     return;
                 }
@@ -131,25 +133,7 @@ public class Game implements InputProcessor {
         return null;
     }
 
-    public GameState getGameState() {
-        return gameState;
-    }
-
-    public void setGameState(GameState gameState) {
-        this.gameState = gameState;
-    }
-
-    private void resetEntityVisibility() {
-        for (AbstractEntity entity : entities) {
-            entity.resetVisibility();
-        }
-    }
-
-    public GameMode getGameMode() {
-        return gameSettings.gameMode;
-    }
-
-    public String getScore() {
+    private ScoreEntry calcScore() {
         if (score == null) {
             float singleTouchTime = 0;
             int singleTouchCount = 0;
@@ -169,14 +153,33 @@ public class Game implements InputProcessor {
                     dragCount++;
                 }
             }
-            score = "SingleTouch: " + Tools.formatNumber(singleTouchTime / singleTouchCount, 1, 2) + "\n" +
-                    "DoubleTouch: " + Tools.formatNumber(doubleTouchTime / doubleTouchCount, 1, 2) + "\n" +
-                    "Drag:        " + Tools.formatNumber(dragTime / dragCount, 1, 2) + "\n\n" +
-                    "Overall:     " +
-                    Tools.formatNumber((singleTouchTime + doubleTouchTime + dragTime) / (singleTouchCount + doubleTouchCount + dragCount),
-                                       1, 2);
+
+            score = new ScoreEntry(singleTouchTime / singleTouchCount, doubleTouchTime / doubleTouchCount, dragTime / dragCount,
+                                   (singleTouchTime + doubleTouchTime + dragTime) / (singleTouchCount + doubleTouchCount + dragCount));
         }
 
+        return score;
+    }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+
+    private void resetEntityVisibility() {
+        for (AbstractEntity entity : entities) {
+            entity.resetVisibility();
+        }
+    }
+
+    public GameMode getGameMode() {
+        return gameSettings.gameMode;
+    }
+
+    public ScoreEntry getScore() {
         return score;
     }
 

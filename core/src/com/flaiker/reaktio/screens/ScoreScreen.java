@@ -40,13 +40,15 @@ public class ScoreScreen extends AbstractScreen {
     public ScoreScreen(Reaktio reaktio, Game game, Skin skin) {
         super(reaktio, skin);
         this.game = game;
+
+        reaktio.getPreferencesManager().addScoreEntry(game.getScore());
     }
 
     @Override
     public void show() {
         super.show();
 
-        Gdx.app.log(LOG, game.getScore());
+        Gdx.app.log(LOG, game.getScore().toString());
 
         Table table = new Table(skin);
         table.setFillParent(true);
@@ -57,7 +59,9 @@ public class ScoreScreen extends AbstractScreen {
         table.add(titleLabel).spaceBottom(5).align(1);
         table.row();
 
-        Container<Label> scoreListContainer = new Container<Label>(new Label(game.getScore(), skin));
+        String score = game.getScore().getComparedScore(reaktio.getPreferencesManager().getScoreArray());
+
+        Container<Label> scoreListContainer = new Container<Label>(new Label(score, skin));
         scoreListContainer.setBackground(skin.getDrawable("default-round"));
         scoreListContainer.setColor(1, 1, 1, 0.9f);
 
